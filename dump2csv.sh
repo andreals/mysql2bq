@@ -2,19 +2,25 @@
 
 # Function to convert CREATE TABLE statement in BigQuery Schema JSON-file.
 generate_schema_file() {
+    
     content=$(zcat "$1")
     backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
     table=""
     filename=""
     jsoncontent=""
+
     while read -r a; do
+
         if [[ $a =~ "CREATE TABLE" ]]; then
+
             table=$(echo $a | grep -Po '\`(.+)\`' | sed -e "s/\`//g")
             filename="bqfiles/$table.json"
             rm -rf "$filename"
+
         elif [[ $a =~ "PRIMARY" ]]; then
             break
         elif [[ $table != "" ]]; then
+
             read -a arr <<< $a
             column=$(echo ${arr[0]} | sed -e "s/\`//g")
             type=$(echo ${arr[1]})
@@ -29,6 +35,7 @@ generate_schema_file() {
             elif [[ $type =~ "float" ]] || [[ $type =~ "double" ]]; then
                 type="FLOAT"
             fi
+
             mode=""
             if [[ $a =~ "NOT NULL" ]]; then
                 mode="NULLABLE"
@@ -36,11 +43,13 @@ generate_schema_file() {
 
             json="{\"name\": \"${column}\", \"type\": \"${type}\", \"mode\": \"${mode}\"},"
             jsoncontent="${jsoncontent}${json}"
+
         fi
+
     done <<< "$(echo "$content")"
 
     jsoncontent=$(echo "$jsoncontent" | sed -e 's/,$//g')
-    jsoncontent="[$jsoncontent]" 
+    jsoncontent="[$jsoncontent]"
     echo "$jsoncontent" > "$filename"
 
     mv "$1" "$backupfilename"
@@ -48,23 +57,31 @@ generate_schema_file() {
 
 # Function to convert INSERT INTO statement in CSV-file.
 generate_csv_file() {
+    
     content=$(zcat "$1")
     backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
     table=""
     filename=""
+
     while read -r a; do
+        
         if [[ $a =~ "INSERT INTO" ]]; then
+        
             table=$(echo $a | grep -Po '\`(.+)\`' | sed -e "s/\`//g")
             filename="bqfiles/$table.csv"
             rm -rf "$filename"
+        
         elif [[ $table != "" ]]; then
+        
             csv=$(echo $a | sed -e "s/0000-00-00//g" | sed -e "s/0000-00-00 00:00:00//g" | sed -e "s/NULL//g" | sed -e "s/null//g")
             csv=$(echo "$csv" | sed -e 's/,$//g')
             csv=$(echo "$csv" | sed -e 's/;$//g')
             csv=$(echo "$csv" | sed -e 's/)$//g')
             csv=$(echo "$csv" | sed -e 's/^(//g')
             echo "$csv" >> "$filename"
+
         fi
+
     done <<< "$(echo "$content")"
 
     mv "$1" "$backupfilename"
