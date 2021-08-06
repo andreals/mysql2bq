@@ -11,12 +11,12 @@ dataset=$6
 
 # Running 'getdumpfiles.sh'...
 echo "Running 'getdumpfiles.sh'..."
-."$path"getdumpfiles.sh "$user" "$password" "$host" "$folder"
+"$path"getdumpfiles.sh "$user" "$password" "$host" "$folder"
 
 # Running 'dump2csv.sh'...
 echo "Running 'dump2csv.sh'..."
-./dump2csv.sh
+"$path"/dump2csv.sh
 
 # Running 'upload2bq.sh'...
 echo "Running 'upload2bq.sh'..."
-./upload2bq.sh "$project_id" "$dataset"
+"$path"/upload2bq.sh "$project_id" "$dataset"

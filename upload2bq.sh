@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Creating global vars
+path=$(echo "$0" | sed -e "s/upload2bq.sh//g")
 project_id=$1
 dataset=$2
 date=$(date '+%Y%m%d_%H')
 tables=()
 
-for entry in bqfiles/*; do
+for entry in "$path"bqfiles/*; do
     
     backupfilename=$(echo "$entry" | sed -e "s/bqfiles\//bqfiles\/backups\//g")
     if [ $entry != "bqfiles/backups" ]; then

@@ -87,8 +87,11 @@ generate_csv_file() {
     mv "$1" "$backupfilename"
 }
 
+# Creating global vars
+path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
+
 # List all dump files of directory.
-for entry in dumpfiles/*; do
+for entry in "$path"dumpfiles/*; do
     
     if [ $entry != "dumpfiles/backups" ]; then
         
