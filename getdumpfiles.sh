@@ -7,4 +7,4 @@ host=$3
 folder=$4
 
 # Getting all dump files
-rsync -avW -e sshpass -p "$password" scp "$user"@"$host":"$folder"*.sql.gz dumpfiles/.
+sshpass -p "$password" scp "$user"@"$host":"$folder"*.sql.gz dumpfiles/.
