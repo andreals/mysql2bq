@@ -97,7 +97,7 @@ path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 # List all dump files of directory.
 for entry in $path"dumpfiles/*"; do
     
-    echo "${entry}"
+    echo $entry
     if [ $entry != "${path}dumpfiles/backups" ]; then
         
         if [[ $entry =~ "-schema." ]]; then
