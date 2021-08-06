@@ -61,7 +61,7 @@ generate_schema_file() {
 generate_csv_file() {
     
     echo "$1"
-    
+
     content=$(zcat "$1")
     backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
     table=""
@@ -97,6 +97,7 @@ path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 # List all dump files of directory.
 for entry in "${path}dumpfiles/*"; do
     
+    echo "${entry}"
     if [ $entry != "${path}dumpfiles/backups" ]; then
         
         if [[ $entry =~ "-schema." ]]; then
