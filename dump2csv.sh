@@ -94,11 +94,14 @@ generate_csv_file() {
 # Creating global vars
 path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 
+# Going to correct path
+cd $path
+
 # List all dump files of directory.
-for entry in $path"dumpfiles/*"; do
+for entry in dumpfiles/*; do
     
     echo $entry
-    if [ $entry != "${path}dumpfiles/backups" ]; then
+    if [ $entry != "dumpfiles/backups" ]; then
         
         if [[ $entry =~ "-schema." ]]; then
             generate_schema_file $entry

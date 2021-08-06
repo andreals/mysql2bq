@@ -7,7 +7,10 @@ dataset=$2
 date=$(date '+%Y%m%d_%H')
 tables=()
 
-for entry in "$path"bqfiles/*; do
+# Going to correct path
+cd $path
+
+for entry in bqfiles/*; do
     
     backupfilename=$(echo "$entry" | sed -e "s/bqfiles\//bqfiles\/backups\//g")
     if [ $entry != "bqfiles/backups" ]; then
