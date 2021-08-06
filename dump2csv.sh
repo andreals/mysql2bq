@@ -3,8 +3,6 @@
 # Function to convert CREATE TABLE statement in BigQuery Schema JSON-file.
 generate_schema_file() {
     
-    echo "$1"
-    
     content=$(zcat "$1")
     backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
     table=""
@@ -59,8 +57,6 @@ generate_schema_file() {
 
 # Function to convert INSERT INTO statement in CSV-file.
 generate_csv_file() {
-    
-    echo "$1"
 
     content=$(zcat "$1")
     backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
@@ -100,7 +96,6 @@ cd $path
 # List all dump files of directory.
 for entry in dumpfiles/*; do
     
-    echo $entry
     if [ $entry != "dumpfiles/backups" ]; then
         
         if [[ $entry =~ "-schema." ]]; then
