@@ -91,9 +91,12 @@ for entry in dumpfiles/*; do
     
     if [ $entry != "dumpfiles/backups" ]; then
         
+        echo "Processing file '${entry}'..."
         if [[ $entry =~ "-schema." ]]; then
+            echo "Generating json-file from '${entry}'..."
             generate_schema_file $entry
         else
+            echo "Generating csv-file from '${entry}'..."
             generate_csv_file $entry
         fi
 
