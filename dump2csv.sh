@@ -58,33 +58,26 @@ generate_schema_file() {
 # Function to convert INSERT INTO statement in CSV-file.
 generate_csv_file() {
 
-    content=$(zcat "$1")
     backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
-    table=""
-    filename=""
+    table=$(echo "$1" | grep -Po '\.(.+)\.sql\.gz' | sed -e "s/\.sql\.gz//g" | sed -e "s/\.//g")
+    filename="bqfiles/${table}.csv"
+    rm -rf "$filename"
 
-    while read -r a; do
-        
-        if [[ $a =~ "INSERT INTO" ]]; then
-        
-            table=$(echo $a | grep -Po '\`(.+)\`' | sed -e "s/\`//g")
-            filename="bqfiles/$table.csv"
-            rm -rf "$filename"
-        
-        elif [[ $table != "" ]]; then
-        
-            csv=$(echo $a | sed -e "s/0000-00-00//g" | sed -e "s/0000-00-00 00:00:00//g" | sed -e "s/NULL//g" | sed -e "s/null//g")
-            csv=$(echo "$csv" | sed -e 's/,$//g')
-            csv=$(echo "$csv" | sed -e 's/;$//g')
-            csv=$(echo "$csv" | sed -e 's/)$//g')
-            csv=$(echo "$csv" | sed -e 's/^(//g')
-            echo "$csv" >> "$filename"
-
-        fi
-
-    done <<< "$(echo "$content")"
+    zcat "$1" | \
+        sed -e "s/,$//g" | \
+        sed -e "s/;$//g" | \
+        sed -e "s/)$//g" | \
+        sed -e "s/^(//g" | \
+        sed -e "s/0000-00-00//g" | \
+        sed -e "s/0000-00-00 00:00:00//g" | \
+        sed -e "s/NULL//g" | \
+        sed -e "s/null//g" | \
+        sed "/^\/\*/d" | \
+        sed "/^INSERT/d" >> \
+        "$filename"
 
     mv "$1" "$backupfilename"
+
 }
 
 # Creating global vars
