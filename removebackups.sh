@@ -12,4 +12,4 @@ rm -rf dumpfiles/backups/*
 
 # Removing backups of 'bqfiles' folder...
 echo "Removing backups of 'bqfiles' folder..."
-rm -rf dumpfiles/bqfiles/*
+rm -rf bqfiles/bqfiles/*
