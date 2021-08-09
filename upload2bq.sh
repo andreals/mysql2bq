@@ -9,23 +9,20 @@ date=$(date '+%Y%m%d_%H')
 # Going to correct path
 cd $path
 
-for entry in bqfiles/*; do
+for entry in bqfiles/*.json; do
     
     backupfilename=$(echo "$entry" | sed -e "s/bqfiles\//bqfiles\/backups\//g")
-    if [ $entry != "bqfiles/backups" ]; then
         
-        # Getting tables name...
-        table=$(echo "$entry" | grep -Po 'bqfiles\/(.+)\.' | sed -e "s/bqfiles\///g" | sed -e "s/.$//g")
-        
-        # Uploading data...
-        echo "Uploading data of table '$table' in dataset '$dataset' of project '$project_id'..."
-        bq load --project_id="$project_id" --source_format=CSV "$dataset.$table" bqfiles/"$table".csv bqfiles/"$table".json
-        bq load --project_id="$project_id" --source_format=CSV "${dataset}_TimeMachine.${table}_${date}" bqfiles/"$table".csv bqfiles/"$table".json
-        
-        # Moving files to backup folder...
-        mv "bqfiles/$table.csv" "bqfiles/backups/$table.csv"
-        mv "bqfiles/$table.json" "bqfiles/backups/$table.json"
-
-    fi
+    # Getting tables name...
+    table=$(echo "$entry" | grep -Po 'bqfiles\/(.+)\.' | sed -e "s/bqfiles\///g" | sed -e "s/.$//g")
+    
+    # Uploading data...
+    echo "Uploading data of table '$table' in dataset '$dataset' of project '$project_id'..."
+    bq load --project_id="$project_id" --source_format=CSV "$dataset.$table" bqfiles/"$table".csv bqfiles/"$table".json
+    bq load --project_id="$project_id" --source_format=CSV "${dataset}_TimeMachine.${table}_${date}" bqfiles/"$table".csv bqfiles/"$table".json
+    
+    # Moving files to backup folder...
+    mv "bqfiles/$table.csv" "bqfiles/backups/$table.csv"
+    mv "bqfiles/$table.json" "bqfiles/backups/$table.json"
 
 done
