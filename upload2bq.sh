@@ -28,7 +28,7 @@ for table in $tables; do
     # Uploading data...
     echo "Uploading data of table '$table' in dataset '$dataset' of project '$project_id'..."
     bq load --project_id="$project_id" --source_format=CSV "$dataset.$table" bqfiles/"$table".csv bqfiles/"$table".json
-    bq load --project_id="$project_id" --source_format=CSV "${dataset}TimeMachine.${table}_${date}" bqfiles/"$table".csv bqfiles/"$table".json
+    bq load --project_id="$project_id" --source_format=CSV "${dataset}_TimeMachine.${table}_${date}" bqfiles/"$table".csv bqfiles/"$table".json
     
     # Moving files to backup folder...
     mv "bqfiles/$table.csv" "bqfiles/backups/$table.csv"
