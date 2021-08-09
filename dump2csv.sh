@@ -17,7 +17,7 @@ generate_schema_file() {
             filename="bqfiles/$table.json"
             rm -rf "$filename"
 
-        elif [[ $a =~ "PRIMARY" ]]; then
+        elif [[ $a =~ "PRIMARY" || $a =~ ^\) ]]; then
             break
         elif [[ $table != "" ]]; then
 
