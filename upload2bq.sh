@@ -5,7 +5,6 @@ path=$(echo "$0" | sed -e "s/upload2bq.sh//g")
 project_id=$1
 dataset=$2
 date=$(date '+%Y%m%d_%H')
-tables=()
 
 # Going to correct path
 cd $path
@@ -17,21 +16,16 @@ for entry in bqfiles/*; do
         
         # Getting tables name...
         table=$(echo "$entry" | grep -Po 'bqfiles\/(.+)\.' | sed -e "s/bqfiles\///g" | sed -e "s/.$//g")
-        tables+=($table)
+        
+        # Uploading data...
+        echo "Uploading data of table '$table' in dataset '$dataset' of project '$project_id'..."
+        bq load --project_id="$project_id" --source_format=CSV "$dataset.$table" bqfiles/"$table".csv bqfiles/"$table".json
+        bq load --project_id="$project_id" --source_format=CSV "${dataset}_TimeMachine.${table}_${date}" bqfiles/"$table".csv bqfiles/"$table".json
+        
+        # Moving files to backup folder...
+        mv "bqfiles/$table.csv" "bqfiles/backups/$table.csv"
+        mv "bqfiles/$table.json" "bqfiles/backups/$table.json"
 
     fi
-
-done
-
-for table in $tables; do
-
-    # Uploading data...
-    echo "Uploading data of table '$table' in dataset '$dataset' of project '$project_id'..."
-    bq load --project_id="$project_id" --source_format=CSV "$dataset.$table" bqfiles/"$table".csv bqfiles/"$table".json
-    bq load --project_id="$project_id" --source_format=CSV "${dataset}_TimeMachine.${table}_${date}" bqfiles/"$table".csv bqfiles/"$table".json
-    
-    # Moving files to backup folder...
-    mv "bqfiles/$table.csv" "bqfiles/backups/$table.csv"
-    mv "bqfiles/$table.json" "bqfiles/backups/$table.json"
 
 done
