@@ -68,8 +68,8 @@ generate_csv_file() {
         sed -e "s/;$//g" | \
         sed -e "s/)$//g" | \
         sed -e "s/^(//g" | \
-        sed -e "s/0000-00-00//g" | \
         sed -e "s/0000-00-00 00:00:00//g" | \
+        sed -e "s/0000-00-00//g" | \
         sed -e "s/NULL//g" | \
         sed -e "s/null//g" | \
         sed "/^\/\*/d" | \
