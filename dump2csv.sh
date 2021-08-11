@@ -24,15 +24,15 @@ generate_schema_file() {
             read -a arr <<< $a
             column=$(echo ${arr[0]} | sed -e "s/\`//g")
             type=$(echo ${arr[1]})
-            if [[ $type =~ "int" ]]; then
+            if [[ $type =~ ^int ]]; then
                 type="INTEGER"
-            elif [[ $type =~ "enum" ]] || [[ $type =~ "varchar" ]] || [[ $type =~ "char" ]] || [[ $type =~ "text" ]]; then
+            elif [[ $type =~ ^enum ]] || [[ $type =~ ^varchar ]] || [[ $type =~ ^char ]] || [[ $type =~ ^text ]]; then
                 type="STRING"
-            elif [[ $type =~ "decimal" ]]; then
+            elif [[ $type =~ ^decimal ]]; then
                 type="NUMERIC"
-            elif [[ $type =~ "bit" ]]; then
+            elif [[ $type =~ ^bit ]]; then
                 type="BOOL"
-            elif [[ $type =~ "float" ]] || [[ $type =~ "double" ]]; then
+            elif [[ $type =~ ^float ]] || [[ $type =~ ^double ]]; then
                 type="FLOAT"
             fi
 
