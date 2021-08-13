@@ -24,13 +24,13 @@ generate_schema_file() {
             read -a arr <<< $a
             column=$(echo ${arr[0]} | sed -e "s/\`//g")
             type=$(echo ${arr[1]})
-            if [[ $type =~ ^int ]]; then
+            if [[ $type =~ ^int ]] || [[ $type =~ ^tinyint ]] || [[ $type =~ ^smallint ]] || [[ $type =~ ^mediumint ]] || [[ $type =~ ^integer ]] || [[ $type =~ ^bigint ]]; then
                 type="INTEGER"
-            elif [[ $type =~ ^enum ]] || [[ $type =~ ^varchar ]] || [[ $type =~ ^char ]] || [[ $type =~ ^text ]]; then
+            elif [[ $type =~ ^enum ]] || [[ $type =~ ^binary ]] || [[ $type =~ ^varbinary ]] || [[ $type =~ ^tinyblob ]] || [[ $type =~ ^tinytext ]] || [[ $type =~ ^blob ]] || [[ $type =~ ^varchar ]] || [[ $type =~ ^char ]] || [[ $type =~ ^text ]] || [[ $type =~ ^longtext ]] || [[ $type =~ ^mediumtext ]] || [[ $type =~ ^mediumblob ]] || [[ $type =~ ^longblob ]] || [[ $type =~ ^set ]] || [[ $type =~ ^time ]] || [[ $type =~ ^timestamp ]] || [[ $type =~ ^year ]]; then
                 type="STRING"
-            elif [[ $type =~ ^decimal ]]; then
+            elif [[ $type =~ ^decimal ]] || [[ $type =~ ^dec ]]; then
                 type="NUMERIC"
-            elif [[ $type =~ ^bit ]]; then
+            elif [[ $type =~ ^bit ]] || [[ $type =~ ^bool ]]; then
                 type="BOOL"
             elif [[ $type =~ ^float ]] || [[ $type =~ ^double ]]; then
                 type="FLOAT"
