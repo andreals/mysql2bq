@@ -64,16 +64,8 @@ generate_csv_file() {
     rm -rf "$filename"
 
     zcat "$1" | \
-        sed -e "s/,$//g" | \
-        sed -e "s/;$//g" | \
-        sed -e "s/)$//g" | \
-        sed -e "s/^(//g" | \
-        sed -e "s/0000-00-00 00:00:00//g" | \
-        sed -e "s/0000-00-00//g" | \
-        sed -e "s/NULL//g" | \
-        sed -e "s/null//g" | \
         sed "/^\/\*/d" | \
-        sed "/^INSERT/d" >> \
+        ./mysqldump2csv >> \
         "$filename"
 
     mv "$1" "$backupfilename"
