@@ -55,43 +55,39 @@ generate_schema_file() {
     mv "$1" "$backupfilename"
 }
 
-# Function to convert INSERT INTO statement in CSV-file.
-generate_csv_file() {
-
-    backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
-    table=$(echo "$1" | grep -Po '\.(.+)\.sql\.gz' | sed -e "s/\.sql\.gz//g" | sed -e "s/\.//g")
-    filename="bqfiles/${table}.csv"
-    rm -rf "$filename"
-
-    zcat "$1" | \
-        sed "/^\/\*/d" | \
-        ./mysqldump2csv >> \
-        "$filename"
-
-    mv "$1" "$backupfilename"
-
-}
-
 # Creating global vars
 path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 
 # Going to correct path
 cd $path
 
-# List all dump files of directory.
-for entry in dumpfiles/*; do
+# Generate all schema json-files of directory
+for entry in dumpfiles/*-schema.sql.gz; do
     
-    if [ $entry != "dumpfiles/backups" ]; then
-        
-        echo "Processing file '${entry}'..."
-        if [[ $entry =~ "-schema." ]]; then
-            echo "Generating json-file from '${entry}'..."
-            generate_schema_file $entry
-        else
-            echo "Generating csv-file from '${entry}'..."
-            generate_csv_file $entry
-        fi
+    echo "Generating json-file from '${entry}'..."
+    generate_schema_file $entry
 
-    fi
+done
+
+# Generate all data csv-files of directory
+for entry in dumpfiles/*.sql.gz; do
+
+    table=$(echo "$entry" | grep -Po '\.(.+)\.sql\.gz' | sed -e "s/\.sql\.gz//g" | sed -e "s/\.//g")
+    filename="bqfiles/${table}.csv"
+    rm -rf "$filename"
+
+    zcat "$1" | \
+        sed "/^\/\*/d" | \
+        ./mysqldump2csv >> \
+        "$filename" &
+
+done
+
+# Move all .sql.gz files to backup folder
+for entry in dumpfiles/*.sql.gz; do
+    
+    echo "Moving file '${entry}' to backup folder..."
+    backupfilename=$(echo "$entry" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
+    mv "$entry" "$backupfilename"
 
 done
