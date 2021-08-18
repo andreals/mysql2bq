@@ -60,7 +60,6 @@ path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 
 # Going to correct path
 cd "${path}/dumpfiles"
-pwd
 
 # Generate all schema json-files of directory
 for entry in *-schema.sql.gz; do
@@ -73,6 +72,7 @@ done
 # Generate all data csv-files of directory
 for entry in *.sql.gz; do
 
+    echo "Generating csv-file from '${entry}'..."
     table=$(echo "$entry" | grep -Po '\.(.+)\.sql\.gz' | sed -e "s/\.sql\.gz//g" | sed -e "s/\.//g")
     filename="bqfiles/${table}.csv"
     rm -rf "$filename"
