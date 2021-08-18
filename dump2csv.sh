@@ -4,7 +4,7 @@
 generate_schema_file() {
     
     content=$(zcat "$1")
-    backupfilename=$(echo "$1" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
+    backupfilename="backups/$1"
     table=""
     filename=""
     jsoncontent=""
@@ -59,10 +59,10 @@ generate_schema_file() {
 path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 
 # Going to correct path
-cd $path
+cd "${path}/dumpfiles"
 
 # Generate all schema json-files of directory
-for entry in dumpfiles/*-schema.sql.gz; do
+for entry in *-schema.sql.gz; do
     
     echo "Generating json-file from '${entry}'..."
     generate_schema_file $entry
@@ -70,7 +70,7 @@ for entry in dumpfiles/*-schema.sql.gz; do
 done
 
 # Generate all data csv-files of directory
-for entry in dumpfiles/*.sql.gz; do
+for entry in *.sql.gz; do
 
     table=$(echo "$entry" | grep -Po '\.(.+)\.sql\.gz' | sed -e "s/\.sql\.gz//g" | sed -e "s/\.//g")
     filename="bqfiles/${table}.csv"
@@ -84,10 +84,10 @@ for entry in dumpfiles/*.sql.gz; do
 done
 
 # Move all .sql.gz files to backup folder
-for entry in dumpfiles/*.sql.gz; do
+for entry in *.sql.gz; do
     
     echo "Moving file '${entry}' to backup folder..."
-    backupfilename=$(echo "$entry" | sed -e "s/dumpfiles\//dumpfiles\/backups\//g")
+    backupfilename="backups/${entry}"
     mv "$entry" "$backupfilename"
 
 done
