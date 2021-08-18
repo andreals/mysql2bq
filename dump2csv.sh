@@ -77,7 +77,7 @@ for entry in *.sql.gz; do
     filename="bqfiles/${table}.csv"
     rm -rf "$filename"
 
-    echo "zcat "$1" | \
+    echo "zcat "$entry" | \
         sed "/^\/\*/d" | \
         ../mysqldump2csv >> \
         "$filename" &"
