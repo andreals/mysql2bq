@@ -14,7 +14,7 @@ generate_schema_file() {
         if [[ $a =~ "CREATE TABLE" ]]; then
 
             table=$(echo $a | grep -Po '\`(.+)\`' | sed -e "s/\`//g")
-            filename="bqfiles/$table.json"
+            filename="../bqfiles/$table.json"
             rm -rf "$filename"
 
         elif [[ $a =~ "PRIMARY" || $a =~ ^\) ]]; then
@@ -74,7 +74,7 @@ for entry in *.sql.gz; do
 
     echo "Generating csv-file from '${entry}'..."
     table=$(echo "$entry" | grep -Po '\.(.+)\.sql\.gz' | sed -e "s/\.sql\.gz//g" | sed -e "s/\.//g")
-    filename="bqfiles/${table}.csv"
+    filename="../bqfiles/${table}.csv"
     rm -rf "$filename"
 
     zcat "$entry" | \
