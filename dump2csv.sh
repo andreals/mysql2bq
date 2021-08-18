@@ -60,6 +60,7 @@ path=$(echo "$0" | sed -e "s/dump2csv.sh//g")
 
 # Going to correct path
 cd "${path}/dumpfiles"
+pwd
 
 # Generate all schema json-files of directory
 for entry in *-schema.sql.gz; do
